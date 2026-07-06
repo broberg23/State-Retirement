@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NPERS Plan Comparison: Cash Balance vs Defined Contribution</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#eef3f9;--card:#fff;--navy:#173b63;--blue:#2f75b5;--teal:#22bec7;--salmon:#fb7469;--text:#182235;--line:#d9e1ea;--shadow:0 8px 18px rgba(20,41,75,.08);--radius:14px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text);font-size:14px}.page{padding:10px 12px 20px}h1{margin:4px 0 10px;color:var(--navy);font-size:32px;line-height:1.1;font-weight:800}.layout{display:grid;grid-template-columns:470px 1fr;gap:30px;align-items:start}.sidebar{background:var(--card);border:1px solid #dbe3ed;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;min-height:870px}.control-block{margin-bottom:22px}.control-label{display:block;font-weight:700;margin-bottom:10px}.number-input{width:100%;height:38px;border:1px solid #c9d1dc;border-radius:4px;padding:7px 10px;font-size:15px}.range-row{display:flex;justify-content:space-between;align-items:center;height:18px;font-size:11px;margin-bottom:2px}.bubble{background:#3c83c7;color:#fff;border-radius:4px;padding:2px 6px;font-weight:700;font-size:12px}.endtag{background:#e8ebef;border-radius:3px;padding:2px 4px;font-weight:700;font-size:10px}input[type=range]{width:100%;accent-color:#3a82c5;margin:4px 0}.tick-labels{display:flex;justify-content:space-between;font-size:10px;margin-top:2px}.checkbox,.radio{display:flex;align-items:center;gap:7px;margin:9px 0}.divider{border-top:1px solid var(--line);margin:22px 0}.help{color:#42566f;line-height:1.45;font-size:14px;margin-top:18px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-bottom:16px}.metric{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);min-height:78px;padding:18px 22px;border-left:6px solid var(--blue)}.metric-title{text-transform:uppercase;color:#536984;font-size:15px;letter-spacing:.04em;margin-bottom:7px}.metric-value{font-size:18px;color:#1c2738}.tabs{
+display:flex;
+gap:12px;
+margin:8px 0 26px;
+padding:10px 4px 14px;
+border-bottom:none;
+flex-wrap:wrap
+}
+.tab-btn{
+appearance:none;
+background:linear-gradient(135deg,#e7eef8,#d9e8fb);
+border:1px solid #bfd3ec;
+color:#17406d;
+padding:14px 22px;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
+border-radius:12px;
+transition:all .18s ease;
+box-shadow:0 4px 10px rgba(23,59,99,.08);
+letter-spacing:.01em
+}
+.tab-btn:hover{
+transform:translateY(-2px);
+background:linear-gradient(135deg,#d7e8ff,#c7dcfb);
+box-shadow:0 8px 18px rgba(23,59,99,.14)
+}
+.tab-btn.active{
+background:linear-gradient(135deg,#173b63,#2f75b5);
+color:#fff;
+border:1px solid #173b63;
+box-shadow:0 10px 24px rgba(23,59,99,.28)
+}.tab-panel{display:none;background:#fff;min-height:480px}.tab-panel.active{display:block;animation:fadeIn .22s ease}@keyframes fadeIn{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}.chart-card{background:#fff;border-radius:6px;padding:0 0 8px;min-height:560px}.chart-wrap{height:520px;padding:0 12px}.table-wrap{background:#fff;border:1px solid #d8e1eb;max-height:620px;overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px solid #e4eaf1;padding:8px 10px;text-align:right;white-space:nowrap}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th{background:#f3f6fa;color:#21334c;position:sticky;top:0;z-index:1}.assumption-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:20px}.assumption-card{border:1px solid #d8e1eb;border-radius:10px;padding:16px;background:#fbfdff}.assumption-card h3{margin:0 0 10px;color:var(--navy);font-size:18px}.assumption-card p{line-height:1.45;color:#34445b;margin:0 0 10px}@media(max-width:1200px){.layout{grid-template-columns:1fr}.sidebar{min-height:0}.cards{grid-template-columns:1fr 1fr}}@media(max-width:720px){h1{font-size:24px}.cards{grid-template-columns:1fr}.assumption-grid{grid-template-columns:1fr}}
+
+/* Laptop-screen optimization: works well around 1366x768, 1440x900, and 1536x864 */
+@media (max-width: 1599px) {
+  .page {
+    max-width: 1420px;
+    margin: 0 auto;
+    padding: 8px 10px 16px;
+  }
+
+  h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+
+  .layout {
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .sidebar {
+    min-height: auto;
+    padding: 16px 18px;
+  }
+
+  .control-block {
+    margin-bottom: 15px;
+  }
+
+  .control-label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .number-input {
+    height: 34px;
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+
+  .help {
+    font-size: 12.5px;
+    line-height: 1.35;
+    margin-top: 12px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .metric {
+    min-height: 68px;
+    padding: 12px 14px;
+    border-left-width: 5px;
+  }
+
+  .metric-title {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .metric-value {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .tabs {
+    gap: 8px;
+    margin: 4px 0 14px;
+    padding: 6px 2px 8px;
+  }
+
+  .tab-btn {
+    padding: 10px 13px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .chart-card {
+    min-height: 430px;
+  }
+
+  .chart-wrap {
+    height: 395px;
+    padding: 0 8px;
+  }
+
+  #contributions .chart-card {
+    min-height: 400px;
+  }
+
+  #contributions .chart-wrap {
+    height: 365px;
+  }
+
+  #assumptions .chart-card {
+    min-height: 320px !important;
+  }
+
+  #assumptions .chart-wrap {
+    height: 285px !important;
+  }
+
+  .table-wrap {
+    max-height: 480px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 6px 7px;
+  }
+
+  .assumption-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .assumption-card {
+    padding: 12px;
+  }
+
+  .assumption-card h3 {
+    font-size: 15px;
+  }
+
+  .assumption-card p {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+.salary-ticks{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  padding:0 2px;
+  font-size:11px;
+  color:#4a5f78;
+  font-weight:600;
+  letter-spacing:.01em;
+}
+
+.salary-ticks span{
+  white-space:nowrap;
+}
+
+
+.update-btn{
+  width:100%;
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid #1f5f9f;
+  border-radius:10px;
+  background:linear-gradient(135deg,#173b63,#2f75b5);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 5px 14px rgba(23,59,99,.18);
+}
+.update-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(23,59,99,.24);
+}
+.update-status{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:8px;
+  background:#f4f8fd;
+  border:1px solid #d7e5f4;
+  color:#42566f;
+  font-size:12px;
+  line-height:1.35;
+}
+
+
+.source-btn{
+ display:inline-block;
+ margin-right:8px;
+ margin-top:6px;
+ padding:8px 12px;
+ border-radius:8px;
+ background:#f3f7fc;
+ border:1px solid #c8d8ea;
+ color:#173b63;
+ text-decoration:none;
+ font-weight:700;
+ font-size:13px;
+}
+.source-btn:hover{
+ background:#e7f0fb;
+}
+
+
+@media screen and (min-width: 1800px){
+  .container,.app-container,.wrapper{max-width:1880px!important;margin:0 auto!important;}
+  .sidebar{width:440px!important;}
+  .main-content{width:calc(100% - 460px)!important;}
+  .chart-card{min-height:700px!important;}
+  .chart-wrap{height:650px!important;}
+  canvas{max-height:650px!important;}
+  .metric-card{min-height:110px;}
+}
+
+
+/* Compact one-screen dashboard mode */
+@media screen and (min-width: 1500px) and (min-height: 850px){
+  body{
+    overflow:hidden;
+  }
+
+  .page{
+    width:1880px !important;
+    max-width:98vw !important;
+    height:1180px;
+    margin:0 auto !important;
+    padding:8px 10px 10px !important;
+  }
+
+  h1{
+    font-size:28px !important;
+    margin:0 0 4px !important;
+    line-height:1.05 !important;
+  }
+
+  .page > div[style*="Created by"]{
+    margin:0 0 5px 2px !important;
+    font-size:12px !important;
+  }
+
+  .source-btn{
+    padding:5px 9px !important;
+    font-size:11px !important;
+    margin-top:2px !important;
+  }
+
+  .layout{
+    grid-template-columns:360px minmax(0,1fr) !important;
+    gap:14px !important;
+    height:1095px;
+  }
+
+  .sidebar{
+    min-height:0 !important;
+    height:1095px !important;
+    overflow:auto;
+    padding:12px 14px !important;
+  }
+
+  .control-block{
+    margin-bottom:10px !important;
+  }
+
+  .control-label{
+    font-size:12px !important;
+    margin-bottom:5px !important;
+  }
+
+  .number-input{
+    height:30px !important;
+    font-size:13px !important;
+    padding:4px 7px !important;
+  }
+
+  .range-row{
+    height:16px !important;
+  }
+
+  .bubble{
+    font-size:11px !important;
+    padding:2px 5px !important;
+  }
+
+  .endtag{
+    font-size:9px !important;
+  }
+
+  .salary-ticks{
+    margin-top:5px !important;
+    font-size:10px !important;
+  }
+
+  .checkbox,.radio{
+    margin:5px 0 !important;
+    gap:5px !important;
+    font-size:12px !important;
+  }
+
+  .divider{
+    margin:10px 0 !important;
+  }
+
+  .help{
+    font-size:11.5px !important;
+    line-height:1.25 !important;
+    margin-top:8px !important;
+  }
+
+  main{
+    height:1095px;
+    overflow:hidden;
+  }
+
+  .cards{
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:8px !important;
+    margin-bottom:7px !important;
+  }
+
+  .metric{
+    min-height:55px !important;
+    padding:9px 10px !important;
+    border-left-width:4px !important;
+  }
+
+  .metric-title{
+    font-size:10px !important;
+    margin-bottom:3px !important;
+    letter-spacing:.03em !important;
+  }
+
+  .metric-value{
+    font-size:13px !important;
+    font-weight:700 !important;
+  }
+
+  .tabs{
+    gap:7px !important;
+    margin:3px 0 8px !important;
+    padding:4px 1px 5px !important;
+  }
+
+  .tab-btn{
+    padding:8px 11px !important;
+    font-size:12px !important;
+    border-radius:9px !important;
+  }
+
+  .tab-panel{
+    min-height:0 !important;
+  }
+
+  .chart-card{
+    min-height:0 !important;
+    height:915px !important;
+    padding:0 !important;
+  }
+
+  .chart-wrap{
+    height:900px !important;
+    padding:0 8px !important;
+  }
+
+  #contributions .chart-card{
+    height:915px !important;
+  }
+
+  #contributions .chart-wrap{
+    height:900px !important;
+  }
+
+  #assumptions{
+    height:965px;
+    overflow:auto;
+  }
+
+  #assumptions .chart-card{
+    min-height:0 !important;
+    height:390px !important;
+  }
+
+  #assumptions .chart-wrap{
+    height:370px !important;
+  }
+
+  #assumptions .chart-card:has(#recoveryChart){
+    height:500px !important;
+  }
+
+  #assumptions .chart-wrap:has(#recoveryChart){
+    height:480px !important;
+  }
+
+  .assumption-grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:12px !important;
+    padding:12px !important;
+  }
+
+  .assumption-card{
+    padding:10px !important;
+  }
+
+  .assumption-card h3{
+    font-size:14px !important;
+  }
+
+  .assumption-card p{
+    font-size:11.5px !important;
+    line-height:1.25 !important;
+  }
+
+  .table-wrap{
+    max-height:300px !important;
+  }
+
+  table{
+    font-size:11px !important;
+  }
+
+  th,td{
+    padding:5px 6px !important;
+  }
+}
+
+/* For shorter laptops, allow page scroll but keep content tighter */
+@media screen and (max-height: 900px){
+  .chart-card{min-height:420px !important;}
+  .chart-wrap{height:385px !important;}
+  .cards{gap:8px !important;}
+  .metric{min-height:58px !important;}
+}
+
+
+/* Fix tab/chart overlap in compact layout */
+.tab-heading{
+  display:block;
+  clear:both;
+  font-size:13px;
+  font-weight:700;
+  color:#55708d;
+  letter-spacing:.04em;
+  margin:12px 0 6px 6px;
+  text-transform:uppercase;
+}
+
+.tabs{
+  position:relative;
+  z-index:2;
+}
+
+.tab-panel{
+  position:relative;
+  z-index:1;
+  clear:both;
+}
+
+@media screen and (min-width:1500px) and (min-height:850px){
+  .tab-heading{
+    margin:10px 0 6px 6px !important;
+    font-size:12px !important;
+    line-height:1.1 !important;
+  }
+
+  .tabs{
+    margin:0 0 12px 0 !important;
+    padding:0 0 8px 0 !important;
+    min-height:42px !important;
+    align-items:center !important;
+  }
+
+  .tab-btn{
+    padding:8px 12px !important;
+    line-height:1.1 !important;
+  }
+
+  .tab-panel.active{
+    margin-top:0 !important;
+  }
+
+  .chart-card{
+    margin-top:0 !important;
+  }
+
+  .chart-wrap{
+    padding-top:8px !important;
+  }
+
+  main{
+    overflow:hidden !important;
+  }
+}
+
+
+/* Move tabs further right so they align with the chart area */
+@media screen and (min-width:1500px){
+  .tab-heading{
+    margin-left:22px !important;
+  }
+
+  .tabs{
+    margin-left:22px !important;
+    width:calc(100% - 22px) !important;
+  }
+
+  .tab-panel{
+    padding-left:22px !important;
+  }
+
+  .tab-panel h2,
+  .tab-panel h3,
+  .chart-title{
+    margin-left:0 !important;
+  }
+}
+
+
+/* HARD FIX: prevent sidebar, metric cards, tabs, and charts from overlapping */
+@media screen and (min-width:1500px){
+  .layout{
+    display:grid !important;
+    grid-template-columns:380px minmax(0,1fr) !important;
+    column-gap:22px !important;
+    align-items:start !important;
+    width:100% !important;
+  }
+
+  .sidebar{
+    grid-column:1 !important;
+    position:relative !important;
+    z-index:1 !important;
+    width:380px !important;
+    max-width:380px !important;
+  }
+
+  main{
+    grid-column:2 !important;
+    position:relative !important;
+    z-index:2 !important;
+    min-width:0 !important;
+    width:100% !important;
+    margin-left:0 !important;
+    padding-left:0 !important;
+    overflow:hidden !important;
+  }
+
+  .cards{
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:10px !important;
+    margin:0 0 12px 0 !important;
+    width:100% !important;
+  }
+
+  .tab-heading{
+    display:block !important;
+    clear:both !important;
+    margin:10px 0 6px 0 !important;
+    padding:0 !important;
+    width:100% !important;
+  }
+
+  .tabs{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+    margin:0 0 12px 0 !important;
+    padding:0 0 8px 0 !important;
+    width:100% !important;
+    position:relative !important;
+    clear:both !important;
+  }
+
+  .tab-panel{
+    width:100% !important;
+    clear:both !important;
+    padding-left:0 !important;
+    margin-left:0 !important;
+  }
+
+  .chart-card,
+  .chart-wrap{
+    width:100% !important;
+    margin-left:0 !important;
+    padding-left:0 !important;
+  }
+}
+
+/* 1920x1200 compact target */
+@media screen and (min-width:1800px) and (min-height:1000px){
+  .page{
+    width:1880px !important;
+    max-width:98vw !important;
+    margin:0 auto !important;
+  }
+
+  .layout{
+    grid-template-columns:385px minmax(0,1fr) !important;
+    column-gap:24px !important;
+  }
+
+  .sidebar{
+    width:385px !important;
+    max-width:385px !important;
+  }
+
+  .chart-card{
+    height:870px !important;
+  }
+
+  .chart-wrap{
+    height:850px !important;
+  }
+
+  #assumptions{
+    max-height:930px !important;
+    overflow:auto !important;
+  }
+}
+
+
+/* Allow scrolling in the left control panel so text below the Update Returns button is accessible */
+.sidebar{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+}
+
+@media screen and (min-width:1500px){
+  .sidebar{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+  }
+}
+
+
+/* FINAL FIX: keep current dashboard layout but allow the left control panel to scroll */
+html, body{
+  height:100%;
+}
+
+.sidebar{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  max-height:calc(100vh - 115px) !important;
+  padding-bottom:90px !important;
+  scrollbar-width:thin;
+}
+
+/* Make sure compact/desktop rules do not clip the sidebar contents */
+@media screen and (min-width:1500px){
+  .sidebar{
+    height:calc(100vh - 115px) !important;
+    max-height:calc(100vh - 115px) !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding-bottom:120px !important;
+  }
+}
+
+/* If the page itself needs to scroll, allow it. */
+body{
+  overflow-y:auto !important;
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+<h1>NPERS Plan Comparison: Cash Balance vs Defined Contribution</h1>
+<div style="margin:-2px 0 14px 2px;color:#5a6f87;font-size:14px;font-weight:600;">
+  Created by: Brett Roberg
+</div>
+<div style="margin:0 0 16px 2px;">
+  <a class="source-btn" target="_blank" href="https://npers.ne.gov/SelfService/public/aboutus/CashBalInfo.jsp">
+    Cash Balance Return Source
+  </a>
+  <a class="source-btn" target="_blank" href="https://npers.ne.gov/SelfService/public/howto/publications/historicalReturns.jsp">
+    Defined Contribution Return Source
+  </a>
+</div>
+<div class="layout">
+<aside class="sidebar">
+<div class="control-block"><label class="control-label">Starting annual salary</label><div class="range-row"><span class="endtag">$20,000</span><span class="bubble" id="salaryBubble">$40,000</span><span class="endtag">$200,000</span></div><input id="salary" type="range" min="20000" max="200000" step="1000" value="40000" autocomplete="off" /><div class="tick-labels salary-ticks">
+<span>$20k</span>
+<span>$50k</span>
+<span>$80k</span>
+<span>$110k</span>
+<span>$140k</span>
+<span>$170k</span>
+<span>$200k</span>
+</div></div>
+<div class="control-block">
+  <label class="control-label">Current retirement account balance</label>
+  <input id="currentBalance" class="number-input" type="number" step="1000" min="0" value="0" />
+  <div style="font-size:12px;color:#52677f;margin-top:6px;">
+    Optional: enter your current balance. This starting amount is grown forward using the same historical return sequence.
+  </div>
+</div>
+<div class="control-block"><label class="control-label">Employee contribution rate (%)</label><input id="employeeRate" class="number-input" type="number" step="0.1" min="0" max="25" value="4.8" /></div>
+<div class="control-block"><label class="control-label">Employer match (% of employee contribution)</label><input id="matchRate" class="number-input" type="number" step="1" min="0" max="300" value="156" /></div>
+<div class="control-block"><label class="control-label">Annual salary growth (%)</label><input id="salaryGrowth" class="number-input" type="number" step="0.1" min="0" max="15" value="3" /></div>
+<div class="control-block"><label class="control-label">Years until retirement</label><div class="range-row"><span class="endtag">1</span><span class="bubble" id="yearsBubble">30</span><span class="endtag">45</span></div><input id="years" type="range" min="1" max="45" step="1" value="30" /></div>
+<label class="checkbox"><input id="includeDividends" type="checkbox" checked /><span>Include State Cash Balance dividends</span></label>
+<div class="control-block" style="margin-top:20px"><label class="control-label">Contribution timing</label><label class="radio"><input type="radio" name="timing" value="monthly" checked /><span>Monthly / throughout year</span></label><label class="radio"><input type="radio" name="timing" value="yearend" /><span>Year-end</span></label></div>
+<div class="control-block" style="margin-top:14px;">
+  <label class="control-label">ETF comparison overlays</label>
+  <label class="checkbox"><input id="showVOO" type="checkbox" /> <span>Show VOO 2004–2026 trend</span></label>
+  <label class="checkbox"><input id="showSCHB" type="checkbox" /> <span>Show SCHB 2004–2026 trend</span></label>
+</div>
+
+<div class="control-block" style="margin-top:14px;">
+  <label class="control-label">Return data updates</label>
+  <button id="updateReturnsBtn" class="update-btn" type="button">Update returns from NPERS</button>
+  <div id="updateStatus" class="update-status">
+    Uses embedded return assumptions until updated. Button attempts to refresh Cash Balance data from NPERS when browser access allows it.
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="help">Both plans use the same shared historical window: <strong>2004–2026</strong>. Cash Balance uses NPERS interest-credit rates and exact State dividend percentages from the NPERS Cash Balance Rates of Return &amp; Dividends page, including 2026 Q1/Q2 data and the 2026 State dividend. For 2004–2009, the app assumes a 5.00% base return, then adds the State dividend shown by NPERS. Modeled Cash Balance returns are calculated as interest-credit rate plus State dividend. Defined Contribution uses the S&amp;P 500 Stock Index Fund for 2006–2020 and the U.S. Total Stock Market Index Fund for 2021–2025; 2026 defined contribution and ETF values are projected using the prior historical average because they are not listed on the NPERS Cash Balance page. Any current balance entered above is grown forward using the same return assumptions. Optional ETF overlays use the same 2004–2026 projection window and are forecast through the selected retirement years in the balance-growth plot.</div>
+</aside>
+<main>
+<section class="cards">
+<div class="metric"><div class="metric-title">Employee Contribution</div><div class="metric-value" id="employeeContribution"></div></div>
+<div class="metric"><div class="metric-title">Employer Contribution</div><div class="metric-value" id="employerContribution"></div></div>
+<div class="metric"><div class="metric-title">Combined Contribution</div><div class="metric-value" id="combinedContribution"></div></div>
+<div class="metric"><div class="metric-title">Final Cash Balance</div><div class="metric-value" id="cashBalance"></div></div>
+<div class="metric"><div class="metric-title">Final Defined Contribution</div><div class="metric-value" id="deferredBalance"></div></div>
+<div class="metric"><div class="metric-title">Difference</div><div class="metric-value" id="difference"></div></div>
+</section>
+<div class="tab-heading">Interactive analysis tabs</div><nav class="tabs"><button class="tab-btn active" data-tab="balance">Balance growth</button><button class="tab-btn" data-tab="contributions">Contributions vs earnings</button><button class="tab-btn" data-tab="annual">Annual table</button><button class="tab-btn" data-tab="assumptions">Historic return assumptions</button></nav>
+<section id="balance" class="tab-panel active"><div class="chart-card"><div class="chart-wrap"><canvas id="balanceChart"></canvas></div></div></section>
+<section id="contributions" class="tab-panel"><div class="chart-card"><div class="chart-wrap"><canvas id="earningsChart"></canvas></div></div></section>
+<section id="annual" class="tab-panel"><div class="table-wrap"><table><thead><tr><th>Plan year</th><th>Return year</th><th>Salary</th><th>Employee contrib.</th><th>Employer contrib.</th><th>Annual contrib.</th><th>Cash interest</th><th>State dividend</th><th>Cash return<br>(interest + dividend)</th><th>Cash balance</th><th>Defined Contribution return</th><th>Defined Contribution</th></tr></thead><tbody id="annualRows"></tbody></table></div></section>
+<section id="assumptions" class="tab-panel"><div style="padding:20px 20px 0"><div class="chart-card" style="min-height:420px;margin-bottom:20px"><div class="chart-wrap" style="height:380px"><canvas id="historicComparisonChart"></canvas></div></div><div class="chart-card" style="min-height:560px;margin-bottom:20px">
+          <div class="chart-wrap" style="height:520px">
+            <canvas id="recoveryChart"></canvas>
+          </div>
+        </div>
+        <div style="background:#f8fbff;border:1px solid #d9e3ef;border-radius:10px;padding:16px 18px;margin-bottom:22px"><h3 style="margin-top:0;color:#173b63">Historic market declines and recoveries</h3>
+<div style="background:#f8fbff;border:1px solid #d9e3ef;border-radius:10px;padding:14px 18px;margin-top:12px;margin-bottom:22px">
+<b>How to interpret this chart</b><br>
+Each row compares a market decline with the recovery or next major advance that followed. Dot-Com and 9/11 are shown separately because the Dot-Com Bubble was a multi-year valuation collapse, while 9/11 was a short-term market shock that occurred during that broader downturn.<br><br>
+• Dot-Com Bubble: decline period 2000–2002; recovery period 2002–2007.<br>
+• 9/11 Market Shock: short-term decline in September 2001; recovery occurred over the following months, though the broader Dot-Com downturn continued.<br>
+• Inflation / Rate Shock: decline period 2022; recovery period 2023–2024/2025.<br>
+• Iran Conflict Shock: preliminary / ongoing, so values should be treated as short-term context rather than a completed market cycle.
+</div>
+<p>The Defined Contribution plan offers greater growth potential but can experience significant market declines during economic downturns. The Cash Balance plan typically provides steadier growth through a guaranteed interest credit rate and potential State dividends. The recovery chart below highlights several major market declines and the gains that followed, including the Dot-Com Bubble, the 9/11 Market Shock, the 2008 Financial Crisis, COVID, the Inflation & Interest Rate Shock, the 2025 Liberation Day tariff-related selloff, and Iran / Middle East-related volatility. This app uses annual returns for the main projections, while the recovery chart uses approximate event-based market moves for illustration.</p></div></div><div class="assumption-grid"><div class="assumption-card"><h3>Cash Balance return assumptions</h3><p>Cash Balance uses the NPERS year-average interest-credit rate and exact State dividend percentages shown by NPERS. For 2004–2009, the app assumes a 5.00% base return and adds any State dividend shown by NPERS. The modeled Cash Balance return is calculated as interest-credit rate plus State dividend, </p><div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Year</th><th>Interest credit rate</th><th>State dividend</th><th>Modeled cash return<br>(interest + dividend)</th><th>5% only</th></tr></thead><tbody id="cashAssumptionRows"></tbody></table></div></div><div class="assumption-card"><h3>Defined Contribution return assumptions</h3><p>Defined Contribution uses the S&amp;P 500 Stock Index Fund for 2006–2020 and the U.S. Total Stock Market Index Fund for 2021–2025; 2026 defined contribution and ETF values are projected using the prior historical average because they are not listed on the NPERS Cash Balance page. Any current balance entered above is grown forward using the same return assumptions. Optional ETF overlays use the same 2004–2026 projection window and are forecast through the selected retirement years in the balance-growth plot. Years beyond 2025 use the 2004–2026 historical average.</p><div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Year</th><th>Return</th><th>Series used</th></tr></thead><tbody id="dcAssumptionRows"></tbody></table></div></div></div></section>
+</main>
+</div>
+</div>
+<script>
+const yearsHist=[2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+const cashInterestCredit={2004:0.0500,2005:0.0500,2006:0.0500,2007:0.0500,2008:0.0500,2009:0.0500,2010:0.0500,2011:0.0500,2012:0.0500,2013:0.0500,2014:0.0500,2015:0.0500,2016:0.0500,2017:0.0500,2018:0.0500,2019:0.0500,2020:0.0500,2021:0.0500,2022:0.0500,2023:0.0568,2024:0.0572,2025:0.0562,2026:0.0532};
+const cashStateDividend={2004:0.03088,2005:0.0280,2006:0.1350,2007:0.0273,2008:0.0518,2009:0.0000,2010:0.0000,2011:0.0000,2012:0.0000,2013:0.0000,2014:0.0000,2015:0.0453,2016:0.0000,2017:0.0307,2018:0.0546,2019:0.0000,2020:0.0300,2021:0.0525,2022:0.0750,2023:0.0000,2024:0.0248,2025:0.0095,2026:0.0347};
+const cashWithDividends={};const cashWithoutDividends={};yearsHist.forEach(y=>{cashWithoutDividends[y]=0.0500;cashWithDividends[y]=cashInterestCredit[y]+cashStateDividend[y];});
+const dcReturns={2004:0.1088,2005:0.0491,2006:0.1579,2007:0.0549,2008:-0.3689,2009:0.2685,2010:0.1522,2011:0.0222,2012:0.1603,2013:0.3245,2014:0.1374,2015:0.0145,2016:0.1192,2017:0.2183,2018:-0.0438,2019:0.3148,2020:0.1848,2021:0.2570,2022:-0.1950,2023:0.2600,2024:0.2400,2025:0.1500,2026:0.117577};
+const dcSeries={};yearsHist.forEach(y=>{if(y<=2005){dcSeries[y]="S&P 500 proxy"}else if(y<=2020){dcSeries[y]="S&P 500 Stock Index Fund"}else if(y<=2025){dcSeries[y]="U.S. Total Stock Market Index Fund"}else{dcSeries[y]="2026 pending; 2004–2025 average used"}});
+
+// ETF comparison return assumptions aligned to the same 2004-2026 window used by Cash Balance and Defined Contribution.
+// VOO: Vanguard S&P 500 ETF-style annual total returns.
+// SCHB: Schwab U.S. Broad Market ETF-style annual returns where available; pre-inception years use an S&P 500-style proxy so the comparison spans the same years.
+const vooReturns = {
+  2004:0.1088, 2005:0.0491, 2006:0.1579, 2007:0.0549, 2008:-0.3689,
+  2009:0.2685, 2010:0.1506, 2011:0.0207, 2012:0.1598, 2013:0.3233,
+  2014:0.1363, 2015:0.0135, 2016:0.1193, 2017:0.2178, 2018:-0.0442,
+  2019:0.3135, 2020:0.1835, 2021:0.2878, 2022:-0.1820, 2023:0.2632,
+  2024:0.2497, 2025:0.1700, 2026:0.117000
+};
+
+const schbReturns = {
+  2004:0.1283, 2005:0.0617, 2006:0.1557, 2007:0.0549, 2008:-0.3704,
+  2009:0.2870, 2010:0.1688, 2011:0.0106, 2012:0.1640, 2013:0.3338,
+  2014:0.1248, 2015:0.0015, 2016:0.1262, 2017:0.2130, 2018:-0.0526,
+  2019:0.3061, 2020:0.2079, 2021:0.2565, 2022:-0.1955, 2023:0.2598,
+  2024:0.2380, 2025:0.1705, 2026:0.120482
+};
+
+const money0=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});const money2=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2});const pct=new Intl.NumberFormat("en-US",{style:"percent",minimumFractionDigits:3,maximumFractionDigits:3});let balanceChart,earningsChart,historicComparisonChart,recoveryChart;
+function average(v){return v.reduce((a,b)=>a+b,0)/v.length}function getInputs(){return{salary:+document.getElementById("salary").value,currentBalance:+document.getElementById("currentBalance").value,employeeRate:+document.getElementById("employeeRate").value/100,matchRate:+document.getElementById("matchRate").value/100,growth:+document.getElementById("salaryGrowth").value/100,years:+document.getElementById("years").value,includeDividends:document.getElementById("includeDividends").checked,timing:document.querySelector("input[name='timing']:checked").value,showVOO:document.getElementById("showVOO")?document.getElementById("showVOO").checked:false,showSCHB:document.getElementById("showSCHB")?document.getElementById("showSCHB").checked:false}}
+function projectedRows(){
+  const x=getInputs();
+  const cashSeries=x.includeDividends?cashWithDividends:cashWithoutDividends;
+  const cbAvg=average(Object.values(cashSeries));
+  const dcAvg=average(Object.values(dcReturns));
+  const vooAvg=average(Object.values(vooReturns));
+  const schbAvg=average(Object.values(schbReturns));
+  const interestAvg=average(Object.values(cashInterestCredit));
+  const dividendAvg=average(Object.values(cashStateDividend));
+  let salary=x.salary,cash=x.currentBalance||0,dc=x.currentBalance||0,voo=x.currentBalance||0,schb=x.currentBalance||0,totalContribCumulative=x.currentBalance||0;
+  const rows=[];
+  for(let i=1;i<=x.years;i++){
+    const histYear=i<=yearsHist.length?yearsHist[i-1]:"Average";
+    const cashReturn=histYear==="Average"?cbAvg:cashSeries[histYear];
+    const cashInterest=histYear==="Average"?interestAvg:cashInterestCredit[histYear];
+    const cashDividend=histYear==="Average"?dividendAvg:cashStateDividend[histYear];
+    const dcReturn=histYear==="Average"?dcAvg:dcReturns[histYear];
+    const vooReturn=histYear==="Average"?vooAvg:vooReturns[histYear];
+    const schbReturn=histYear==="Average"?schbAvg:schbReturns[histYear];
+    const employee=salary*x.employeeRate,employer=employee*x.matchRate,total=employee+employer;
+    totalContribCumulative+=total;
+    if(x.timing==="monthly"){
+      cash=cash*(1+cashReturn)+total*(1+cashReturn/2);
+      dc=dc*(1+dcReturn)+total*(1+dcReturn/2);
+      voo=voo*(1+vooReturn)+total*(1+vooReturn/2);
+      schb=schb*(1+schbReturn)+total*(1+schbReturn/2);
+    }else{
+      cash=cash*(1+cashReturn)+total;
+      dc=dc*(1+dcReturn)+total;
+      voo=voo*(1+vooReturn)+total;
+      schb=schb*(1+schbReturn)+total;
+    }
+    rows.push({planYear:i,histYear,salary,employee,employer,total,cashInterest,cashDividend,cashReturn,dcReturn,vooReturn,schbReturn,cash,dc,voo,schb,totalContribCumulative,cashEarnings:cash-totalContribCumulative,dcEarnings:dc-totalContribCumulative});
+    salary*=(1+x.growth);
+  }
+  return rows
+}
+function updateSummary(rows){const x=getInputs(),firstEmployee=x.salary*x.employeeRate,firstEmployer=firstEmployee*x.matchRate,firstCombined=firstEmployee+firstEmployer,last=rows[rows.length-1],diff=last.dc-last.cash;document.getElementById("salaryBubble").textContent=money0.format(x.salary);document.getElementById("yearsBubble").textContent=x.years;document.getElementById("employeeContribution").textContent=money0.format(firstEmployee);document.getElementById("employerContribution").textContent=money2.format(firstEmployer)+" / year";document.getElementById("combinedContribution").textContent=money2.format(firstCombined)+" / year";document.getElementById("cashBalance").textContent=money0.format(last.cash);document.getElementById("deferredBalance").textContent=money0.format(last.dc);document.getElementById("difference").textContent=(diff>=0?"Defined Contribution +":"Cash Balance +")+money0.format(Math.abs(diff))}
+function updateAnnualTable(rows){document.getElementById("annualRows").innerHTML=rows.map(r=>`<tr><td>${r.planYear}</td><td>${r.histYear}</td><td>${money0.format(r.salary)}</td><td>${money0.format(r.employee)}</td><td>${money0.format(r.employer)}</td><td>${money0.format(r.total)}</td><td>${pct.format(r.cashInterest)}</td><td>${pct.format(r.cashDividend)}</td><td>${pct.format(r.cashReturn)}</td><td>${money0.format(r.cash)}</td><td>${pct.format(r.dcReturn)}</td><td>${money0.format(r.dc)}</td></tr>`).join("")}
+function updateAssumptions(){document.getElementById("cashAssumptionRows").innerHTML=yearsHist.map(y=>`<tr><td>${y}</td><td>${pct.format(cashInterestCredit[y])}</td><td>${pct.format(cashStateDividend[y])}</td><td>${pct.format(cashWithDividends[y])}</td><td>${pct.format(cashWithoutDividends[y])}</td></tr>`).join("");document.getElementById("dcAssumptionRows").innerHTML=yearsHist.map(y=>`<tr><td>${y}</td><td>${pct.format(dcReturns[y])}</td><td>${dcSeries[y]}</td></tr>`).join("")}
+function makeOrUpdateCharts(rows){const labels=rows.map(r=>r.planYear);const lineOptions={responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{title:{display:true,text:"Estimated retirement account balance over time",align:"start",font:{size:18,weight:"bold"},color:"#111",padding:{bottom:22}},legend:{position:"bottom",labels:{boxWidth:14,usePointStyle:true,padding:18}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${money0.format(ctx.raw)}`}}},scales:{x:{title:{display:true,text:"Plan year",font:{size:14}},grid:{color:"#e6eaf0"}},y:{title:{display:true,text:"Estimated account balance",font:{size:14}},ticks:{callback:v=>money0.format(v)},grid:{color:"#dfe5ec"}}}};const balanceDatasets=[
+  {label:"Cash Balance",data:rows.map(r=>Math.round(r.cash)),borderColor:"#fb7469",backgroundColor:"#fb7469",pointRadius:2.5,borderWidth:3,tension:.25},
+  {label:"Defined Contribution",data:rows.map(r=>Math.round(r.dc)),borderColor:"#22bec7",backgroundColor:"#22bec7",pointRadius:2.5,borderWidth:3,tension:.25}
+];
+const currentInputs=getInputs();
+if(currentInputs.showVOO){
+  balanceDatasets.push({label:"VOO comparison",data:rows.map(r=>Math.round(r.voo)),borderColor:"#6f42c1",backgroundColor:"#6f42c1",pointRadius:2,borderWidth:2.5,tension:.25,borderDash:[6,4]});
+}
+if(currentInputs.showSCHB){
+  balanceDatasets.push({label:"SCHB comparison",data:rows.map(r=>Math.round(r.schb)),borderColor:"#198754",backgroundColor:"#198754",pointRadius:2,borderWidth:2.5,tension:.25,borderDash:[3,4]});
+}
+const balanceData={labels,datasets:balanceDatasets};if(balanceChart){balanceChart.data=balanceData;balanceChart.update()}else{balanceChart=new Chart(document.getElementById("balanceChart"),{type:"line",data:balanceData,options:lineOptions})}const last=rows[rows.length-1],contrib=Math.round(last.totalContribCumulative);const stackedData={labels:["Cash Balance","Defined Contribution"],datasets:[{label:"Starting balance + contributions",data:[contrib,contrib],backgroundColor:"#22bec7",borderColor:"#22bec7",borderWidth:1},{label:"Estimated investment / credit growth",data:[Math.round(Math.max(last.cash-contrib,0)),Math.round(Math.max(last.dc-contrib,0))],backgroundColor:"#fb7469",borderColor:"#fb7469",borderWidth:1}]};const stackedOptions={responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:"Final balance: contributions vs estimated earnings",align:"start",font:{size:18,weight:"bold"},color:"#111",padding:{bottom:18}},legend:{position:"bottom"},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${money0.format(ctx.raw)}`}}},scales:{x:{stacked:true,grid:{color:"#e6eaf0"}},y:{stacked:true,title:{display:true,text:"Final balance components",font:{size:14}},ticks:{callback:v=>money0.format(v)},grid:{color:"#dfe5ec"}}}};if(earningsChart){earningsChart.data=stackedData;earningsChart.options=stackedOptions;earningsChart.update()}else{earningsChart=new Chart(document.getElementById("earningsChart"),{type:"bar",data:stackedData,options:stackedOptions})}}
+function makeHistoricComparisonChart(){const ctx=document.getElementById("historicComparisonChart");if(!ctx)return;const data={labels:yearsHist,datasets:[{label:"Cash Balance return",data:yearsHist.map(y=>cashWithDividends[y]*100),borderColor:"#fb7469",backgroundColor:"#fb7469",pointRadius:2.5,borderWidth:3,tension:.25},{label:"Defined Contribution return",data:yearsHist.map(y=>dcReturns[y]*100),borderColor:"#22bec7",backgroundColor:"#22bec7",pointRadius:2.5,borderWidth:3,tension:.25}]};const options={responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{title:{display:true,text:"Historic annual return comparison",align:"start",font:{size:18,weight:"bold"},color:"#111"},legend:{position:"bottom"},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toFixed(2)}%`}}},scales:{x:{title:{display:true,text:"Year"},grid:{color:"#e6eaf0"}},y:{title:{display:true,text:"Annual return (%)"},grid:{color:"#dfe5ec"}}}};if(historicComparisonChart){historicComparisonChart.data=data;historicComparisonChart.update()}else{historicComparisonChart=new Chart(ctx,{type:"line",data,options})}}
+
+function setUpdateStatus(message, isError=false){
+  const el=document.getElementById("updateStatus");
+  if(!el) return;
+  el.textContent=message;
+  el.style.background=isError?"#fff4f4":"#f4f8fd";
+  el.style.borderColor=isError?"#f1b7b7":"#d7e5f4";
+  el.style.color=isError?"#8a2b2b":"#42566f";
+}
+
+function parsePercent(text){
+  if(!text) return null;
+  const m=String(text).replace(/,/g,"").match(/(-?\d+(?:\.\d+)?)\s*%/);
+  return m ? Number(m[1])/100 : null;
+}
+
+async function updateReturnsFromNPERS(){
+  const url="https://npers.ne.gov/SelfService/public/aboutus/CashBalInfo.jsp";
+  setUpdateStatus("Checking NPERS Cash Balance page...");
+  try{
+    const response=await fetch(url,{cache:"no-store"});
+    if(!response.ok) throw new Error("NPERS request returned status "+response.status);
+    const text=await response.text();
+    const doc=new DOMParser().parseFromString(text,"text/html");
+    const plain=doc.body ? doc.body.innerText : text;
+
+    // This parser is intentionally conservative. It only updates years it can find confidently.
+    // It looks near each year for percentage values and uses the first two percentages as interest/dividend candidates.
+    let updatedYears=[];
+    yearsHist.forEach(y=>{
+      const idx=plain.indexOf(String(y));
+      if(idx<0) return;
+      const nearby=plain.slice(idx, idx+500);
+      const matches=[...nearby.matchAll(/(-?\d+(?:\.\d+)?)\s*%/g)].map(m=>Number(m[1])/100);
+      if(matches.length>=1 && y>=2010){
+        cashInterestCredit[y]=matches[0];
+      }
+      if(matches.length>=2){
+        cashStateDividend[y]=matches[1];
+      }
+      cashWithDividends[y]=cashInterestCredit[y]+cashStateDividend[y];
+      updatedYears.push(y);
+    });
+
+    if(updatedYears.length===0){
+      throw new Error("No year/percent patterns could be parsed from the NPERS page.");
+    }
+
+    render();
+    const now=new Date().toLocaleString();
+    setUpdateStatus("Updated Cash Balance assumptions from NPERS for detected years: "+updatedYears.join(", ")+". Last checked: "+now+".");
+  }catch(err){
+    setUpdateStatus("Could not auto-update from NPERS in this browser. This can happen when opening the file locally because NPERS/browser security may block cross-site requests. Embedded assumptions remain active. Error: "+err.message, true);
+  }
+}
+
+
+function makeRecoveryChart(){
+  const ctx=document.getElementById("recoveryChart");
+  if(!ctx)return;
+
+  const eventMeta=[
+    {event:"Great Depression (1929-1932)",declinePeriod:"Decline: 1929-1932",recoveryPeriod:"Recovery: 1932-1937"},
+    {event:"World War II (1939-1942)",declinePeriod:"Decline: 1939-1942",recoveryPeriod:"Recovery: 1942-1946"},
+    {event:"1973-74 Oil Crisis (1973-1974)",declinePeriod:"Decline: 1973-1974",recoveryPeriod:"Recovery: 1974-1980"},
+    {event:"Black Monday (1987)",declinePeriod:"Decline: 1987",recoveryPeriod:"Recovery: 1987-1989"},
+    {event:"Dot-Com Bubble (2000-2002)",declinePeriod:"Decline: 2000-2002",recoveryPeriod:"Recovery: 2002-2007"},
+    {event:"9/11 Market Shock (2001)",declinePeriod:"Decline: Sept. 2001",recoveryPeriod:"Recovery: late 2001-2002"},
+    {event:"Great Financial Crisis (2007-2009)",declinePeriod:"Decline: 2007-2009",recoveryPeriod:"Recovery: 2009-2013"},
+    {event:"COVID-19 Crash (2020)",declinePeriod:"Decline: 2020",recoveryPeriod:"Recovery: 2020-2021/2022"},
+    {event:"2022 Inflation / Rate Shock (2022)",declinePeriod:"Decline: 2022",recoveryPeriod:"Recovery: 2023-2024/2025"},
+    {event:"Liberation Day Tariff Shock (2025)",declinePeriod:"Decline: 2025",recoveryPeriod:"Recovery: 2025"},
+    {event:"Iran Conflict Shock (2026)",declinePeriod:"Decline: 2026",recoveryPeriod:"Recovery: preliminary / ongoing"}
+  ];
+
+  const recoveryData={
+    labels:eventMeta.map(d=>d.event),
+    datasets:[
+      {
+        label:"Peak-to-trough decline",
+        data:[-86,-35,-48,-34,-49,-12,-57,-34,-25,-19,-6],
+        backgroundColor:"#fb7469",
+        borderColor:"#fb7469",
+        borderWidth:1
+      },
+      {
+        label:"Recovery / next major advance",
+        data:[325,158,126,64,102,21,178,114,68,24,10],
+        backgroundColor:"#22bec7",
+        borderColor:"#22bec7",
+        borderWidth:1
+      }
+    ]
+  };
+
+  const recoveryOptions={
+    indexAxis:"y",
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      title:{display:true,text:"Major market declines and recoveries: the long-term market still moved up and to the right",align:"start",font:{size:18,weight:"bold"},color:"#111"},
+      subtitle:{display:true,text:"Approximate S&P 500 / broad U.S. stock market peak-to-trough declines and subsequent recoveries. Values are rounded for illustration; recent entries are preliminary/ongoing.",align:"start",color:"#52677f"},
+      legend:{position:"bottom"},
+      tooltip:{
+        callbacks:{
+          title:items=>items.length?items[0].label:"",
+          label:ctx=>{
+            const meta=eventMeta[ctx.dataIndex];
+            const period=ctx.datasetIndex===0?meta.declinePeriod:meta.recoveryPeriod;
+            return `${ctx.dataset.label}: ${ctx.raw}% (${period})`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{
+        min:-100,
+        max:350,
+        title:{display:true,text:"Percent change (%)"},
+        ticks:{callback:v=>v+"%"},
+        grid:{color:"#dfe5ec"}
+      },
+      y:{
+        grid:{color:"#eef2f6"},
+        ticks:{font:{size:12}}
+      }
+    }
+  };
+
+  if(recoveryChart){
+    recoveryChart.data=recoveryData;
+    recoveryChart.options=recoveryOptions;
+    recoveryChart.update();
+  }else{
+    recoveryChart=new Chart(ctx,{type:"bar",data:recoveryData,options:recoveryOptions});
+  }
+}
+
+function render(){const rows=projectedRows();updateSummary(rows);updateAnnualTable(rows);updateAssumptions();makeOrUpdateCharts(rows);makeHistoricComparisonChart();makeRecoveryChart()}
+document.querySelectorAll("input").forEach(el=>{el.addEventListener("input",render);el.addEventListener("change",render)});document.querySelectorAll(".tab-btn").forEach(btn=>{btn.addEventListener("click",()=>{document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.getElementById(btn.dataset.tab).classList.add("active");setTimeout(()=>{if(balanceChart)balanceChart.resize();if(earningsChart)earningsChart.resize();if(historicComparisonChart)historicComparisonChart.resize();if(recoveryChart)recoveryChart.resize()},50)})});
+
+const updateReturnsButton=document.getElementById("updateReturnsBtn");
+if(updateReturnsButton){
+  updateReturnsButton.addEventListener("click", updateReturnsFromNPERS);
+}
+
+document.getElementById("salary").value="40000";document.getElementById("salaryBubble").textContent="$40,000";render();
+</script>
+</body>
+</html>
